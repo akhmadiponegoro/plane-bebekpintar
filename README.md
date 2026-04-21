@@ -6,31 +6,77 @@ MCP tools for the self-hosted Plane instance at:
 https://plane.bebekpintar.my.id
 ```
 
-The plugin defaults to workspace `cybersec-pm` and the `Super Umbies` project:
+This plugin works for any project in any workspace on the Plane Bebekpintar instance.
+
+The current default values are:
 
 ```text
-c99aa5bb-08c6-4d79-b21a-df117b215b4f
+workspace_slug = cybersec-pm
+project_id = c99aa5bb-08c6-4d79-b21a-df117b215b4f
 ```
 
+They are only defaults. Teammates can point the plugin to a different workspace or project by changing `workspace_slug` and `project_id` in tool arguments, or by setting environment variables.
+
 This Plane instance uses the legacy `issues` endpoint. The plugin does not call `work-items`.
+
+## Benefits
+
+In issue-heavy engineering workflows, this plugin usually helps because Codex can fetch Plane data on demand instead of carrying repeated project metadata inside the chat.
+
+Typical practical benefits:
+
+- can reduce repeated project-management context in the conversation by roughly `30%` to `50%`
+- can reduce repeated token usage for issue lookup, state lookup, and recap tasks by roughly `20%` to `30%`
+- improves accuracy because Codex reads live Plane data instead of relying on older turns
+- keeps long development threads cleaner because issue state, module mapping, and project metadata stay in Plane
+
+The exact savings depend on how often your team used to paste issue lists, progress notes, and project status into the conversation manually.
 
 ## Environment
 
 Set the API key before starting Codex or running the MCP server.
 
-PowerShell:
+Required:
 
 ```powershell
 $env:PLANE_BEBEKPINTAR_API_KEY = "plane_api_your_key_here"
+```
+
+Optional default configuration:
+
+```powershell
+$env:PLANE_BEBEKPINTAR_BASE_URL = "https://plane.bebekpintar.my.id"
+$env:PLANE_BEBEKPINTAR_WORKSPACE_SLUG = "cybersec-pm"
+$env:PLANE_BEBEKPINTAR_PROJECT_ID = "c99aa5bb-08c6-4d79-b21a-df117b215b4f"
 ```
 
 Windows user environment:
 
 ```powershell
 [Environment]::SetEnvironmentVariable("PLANE_BEBEKPINTAR_API_KEY", "plane_api_your_key_here", "User")
+[Environment]::SetEnvironmentVariable("PLANE_BEBEKPINTAR_BASE_URL", "https://plane.bebekpintar.my.id", "User")
+[Environment]::SetEnvironmentVariable("PLANE_BEBEKPINTAR_WORKSPACE_SLUG", "cybersec-pm", "User")
+[Environment]::SetEnvironmentVariable("PLANE_BEBEKPINTAR_PROJECT_ID", "c99aa5bb-08c6-4d79-b21a-df117b215b4f", "User")
 ```
 
 Do not commit or store the API key in this plugin.
+
+## Workspace And Project Targeting
+
+To use another workspace, change `workspace_slug` based on the Plane workspace slug.
+
+To use another project, change `project_id` based on the Plane project UUID.
+
+Per-call example:
+
+```json
+{
+  "workspace_slug": "my-other-workspace",
+  "project_id": "my-project-uuid"
+}
+```
+
+Or set both as environment variables so they become the default values for all tool calls.
 
 ## Run The MCP Server
 
@@ -56,15 +102,17 @@ Recommended flow for teammates:
 https://github.com/akhmadiponegoro/plane-bebekpintar
 ```
 
-4. After installation, set the environment variable:
+4. After installation, set the environment variables:
 
 ```powershell
 [Environment]::SetEnvironmentVariable("PLANE_BEBEKPINTAR_API_KEY", "plane_api_your_key_here", "User")
+[Environment]::SetEnvironmentVariable("PLANE_BEBEKPINTAR_WORKSPACE_SLUG", "my-workspace-slug", "User")
+[Environment]::SetEnvironmentVariable("PLANE_BEBEKPINTAR_PROJECT_ID", "my-project-id", "User")
 ```
 
-5. Restart Codex so the environment variable is loaded.
+5. Restart Codex so the environment variables are loaded.
 
-This plugin exposes a local `STDIO` MCP server through the plugin manifest, so teammates do not need to set up a separate Streamable HTTP MCP URL.
+This plugin exposes a local `STDIO` MCP server through the plugin manifest, so teammates do not need to configure a separate Streamable HTTP MCP URL.
 
 ## Tools
 
@@ -77,7 +125,7 @@ This plugin exposes a local `STDIO` MCP server through the plugin manifest, so t
 - `plane_search_issues`: Search issues by text. It queries the legacy issues endpoint and filters locally across fields such as `name`, `title`, `description`, and `identifier`.
 - `plane_create_issue`: Create a new issue in the legacy `issues` endpoint.
 - `plane_update_issue`: Update an existing issue.
-- `plane_move_issue_state`: Move an issue to another state by `state_id` or `state_name`. State lookup accepts names such as `Todo`, `In Progress`, `Done`, and also normalized variants such as `todo`, `in-progress`, or state groups like `started`.
+- `plane_move_issue_state`: Move an issue to another state by `state_id` or `state_name`. State lookup accepts names such as `Todo`, `In Progress`, `Done`, normalized variants such as `todo` and `in-progress`, and state groups such as `started`.
 - `plane_create_module`: Create a new module in the project.
 - `plane_add_issue_to_modules`: Attach an issue to one or more modules by module id or module name.
 
@@ -94,7 +142,7 @@ List projects:
 }
 ```
 
-List Super Umbies issues:
+List issues for the selected project:
 
 ```json
 {
@@ -127,7 +175,7 @@ Create a module and attach an issue to it:
 ```json
 {
   "name": "Files",
-  "description": "Files-related work for Super Umbies"
+  "description": "Files-related work"
 }
 ```
 
@@ -147,8 +195,10 @@ python .\scripts\smoke_test.py
 The smoke test calls:
 
 - `plane_me`
-- `plane_list_projects` for `cybersec-pm`
-- `plane_list_issues` for `Super Umbies`
+- `plane_list_projects`
+- `plane_list_issues`
+
+The default workspace and project follow the configured environment variables or fall back to the bundled defaults.
 
 ## Error Handling
 

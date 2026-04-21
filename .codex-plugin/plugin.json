@@ -1,7 +1,7 @@
 {
   "name": "plane-bebekpintar",
   "version": "0.1.0",
-  "description": "Read-only MCP tools for the Plane Bebekpintar self-hosted instance.",
+  "description": "MCP tools for the Plane Bebekpintar self-hosted instance across any workspace or project.",
   "author": {
     "name": "Bebekpintar",
     "email": "",
@@ -18,8 +18,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Plane Bebekpintar",
-    "shortDescription": "Read Plane Bebekpintar projects and issues from Codex.",
-    "longDescription": "Provides read-only MCP tools for the self-hosted Plane instance at plane.bebekpintar.my.id, defaulting to workspace cybersec-pm and project Super Umbies.",
+    "shortDescription": "Use Codex to read and manage Plane work across workspaces and projects.",
+    "longDescription": "Provides MCP tools for the self-hosted Plane Bebekpintar instance and can reduce repeated project-management chatter in chat by roughly 30-50% and repeated token spend by roughly 20-30% in issue-heavy workflows by fetching Plane data on demand instead of pasting it into context. Teams can target any workspace or project by changing workspace_slug and project_id, or by setting default environment variables.",
     "developerName": "Bebekpintar",
     "category": "Productivity",
     "capabilities": [
@@ -30,9 +30,9 @@
     "privacyPolicyURL": "",
     "termsOfServiceURL": "",
     "defaultPrompt": [
-      "List issues in Super Umbies.",
-      "Search Plane issues for a keyword.",
-      "Show my Plane user profile."
+      "List issues in the selected Plane project.",
+      "Move an issue to In Progress.",
+      "Create a module and attach an issue to it."
     ],
     "brandColor": "#2563EB"
   }

@@ -10,10 +10,13 @@ import urllib.request
 from typing import Any
 
 
-BASE_URL = "https://plane.bebekpintar.my.id"
 API_KEY_ENV = "PLANE_BEBEKPINTAR_API_KEY"
-DEFAULT_WORKSPACE = "cybersec-pm"
-DEFAULT_PROJECT_ID = "c99aa5bb-08c6-4d79-b21a-df117b215b4f"
+BASE_URL_ENV = "PLANE_BEBEKPINTAR_BASE_URL"
+WORKSPACE_ENV = "PLANE_BEBEKPINTAR_WORKSPACE_SLUG"
+PROJECT_ENV = "PLANE_BEBEKPINTAR_PROJECT_ID"
+BASE_URL = os.environ.get(BASE_URL_ENV, "https://plane.bebekpintar.my.id")
+DEFAULT_WORKSPACE = os.environ.get(WORKSPACE_ENV, "cybersec-pm")
+DEFAULT_PROJECT_ID = os.environ.get(PROJECT_ENV, "c99aa5bb-08c6-4d79-b21a-df117b215b4f")
 REQUEST_TIMEOUT_SECONDS = 20
 BROWSER_USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
