@@ -1,0 +1,39 @@
+{
+  "name": "plane-bebekpintar",
+  "version": "0.1.0",
+  "description": "Read-only MCP tools for the Plane Bebekpintar self-hosted instance.",
+  "author": {
+    "name": "Bebekpintar",
+    "email": "",
+    "url": "https://plane.bebekpintar.my.id"
+  },
+  "homepage": "https://plane.bebekpintar.my.id",
+  "repository": "",
+  "license": "MIT",
+  "keywords": [
+    "plane",
+    "project-management",
+    "mcp"
+  ],
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Plane Bebekpintar",
+    "shortDescription": "Read Plane Bebekpintar projects and issues from Codex.",
+    "longDescription": "Provides read-only MCP tools for the self-hosted Plane instance at plane.bebekpintar.my.id, defaulting to workspace cybersec-pm and project Super Umbies.",
+    "developerName": "Bebekpintar",
+    "category": "Productivity",
+    "capabilities": [
+      "MCP",
+      "Read"
+    ],
+    "websiteURL": "https://plane.bebekpintar.my.id",
+    "privacyPolicyURL": "",
+    "termsOfServiceURL": "",
+    "defaultPrompt": [
+      "List issues in Super Umbies.",
+      "Search Plane issues for a keyword.",
+      "Show my Plane user profile."
+    ],
+    "brandColor": "#2563EB"
+  }
+}

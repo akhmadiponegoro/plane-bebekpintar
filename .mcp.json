@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "plane-bebekpintar": {
+      "command": "python",
+      "args": [
+        "./scripts/plane_mcp_server.py"
+      ]
+    }
+  }
+}
