@@ -41,6 +41,34 @@ TOOLS: list[dict[str, Any]] = [
         },
     },
     {
+        "name": "plane_create_project",
+        "description": "Create a new project in a Plane workspace.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Project name (required).",
+                },
+                "identifier": {
+                    "type": "string",
+                    "description": "Project identifier/slug (required, uppercase recommended, e.g., 'PROJ').",
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Project description (optional).",
+                },
+                "workspace_slug": {
+                    "type": "string",
+                    "description": f"Plane workspace slug. Defaults to {DEFAULT_WORKSPACE}.",
+                    "default": DEFAULT_WORKSPACE,
+                },
+            },
+            "required": ["name", "identifier"],
+            "additionalProperties": False,
+        },
+    },
+    {
         "name": "plane_list_states",
         "description": "List workflow states in a Plane project.",
         "inputSchema": {
@@ -298,6 +326,15 @@ def call_tool(name: str, args: dict[str, Any]) -> dict[str, Any]:
             payload = client.list_projects(
                 workspace_slug=args.get("workspace_slug", DEFAULT_WORKSPACE),
                 per_page=args.get("per_page", 20),
+            )
+        elif name == "plane_create_project":
+            project_name = require_arg(args, "name")
+            project_identifier = require_arg(args, "identifier")
+            payload = client.create_project(
+                name=project_name,
+                identifier=project_identifier,
+                description=args.get("description"),
+                workspace_slug=args.get("workspace_slug", DEFAULT_WORKSPACE),
             )
         elif name == "plane_list_states":
             payload = client.list_states(
