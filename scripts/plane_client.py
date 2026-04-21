@@ -54,6 +54,26 @@ class PlaneClient:
             "raw_count": len(extract_items(payload)),
         }
 
+    def create_project(
+        self,
+        name: str,
+        identifier: str,
+        description: str | None = None,
+        workspace_slug: str = DEFAULT_WORKSPACE,
+    ) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "name": name,
+            "identifier": identifier,
+        }
+        if description is not None:
+            payload["description"] = description
+        response = self._request_json(
+            "POST",
+            f"/api/v1/workspaces/{quote_path(workspace_slug)}/projects/",
+            body=payload,
+        )
+        return summarize_project(response)
+
     def list_states(
         self,
         workspace_slug: str = DEFAULT_WORKSPACE,
