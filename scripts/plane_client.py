@@ -292,11 +292,21 @@ class PlaneClient:
                 {"per_page": 100},
             )
         )
+        requested = normalize_label(state_name)
         for state in states:
-            if isinstance(state.get("name"), str) and state["name"].casefold() == state_name.casefold():
+            state_id = str(state.get("id", ""))
+            state_name_value = state.get("name")
+            state_group_value = state.get("group")
+            if state_id == state_name:
+                return state_id
+            if isinstance(state_name_value, str) and normalize_label(state_name_value) == requested:
+                return state_id
+            if isinstance(state_group_value, str) and normalize_label(state_group_value) == requested:
                 return str(state["id"])
         available = ", ".join(
-            str(state.get("name")) for state in states if isinstance(state.get("name"), str)
+            f"{state.get('name')} ({state.get('group')})"
+            for state in states
+            if isinstance(state.get("name"), str)
         )
         raise PlaneError(f"State '{state_name}' not found. Available states: {available}")
 
@@ -314,8 +324,13 @@ class PlaneClient:
                 {"per_page": 100},
             )
         )
+        requested = normalize_label(module_name)
         for module in modules:
-            if isinstance(module.get("name"), str) and module["name"].casefold() == module_name.casefold():
+            module_id = str(module.get("id", ""))
+            module_name_value = module.get("name")
+            if module_id == module_name:
+                return module_id
+            if isinstance(module_name_value, str) and normalize_label(module_name_value) == requested:
                 return str(module["id"])
         available = ", ".join(
             str(module.get("name")) for module in modules if isinstance(module.get("name"), str)
@@ -549,3 +564,10 @@ def dedupe_preserve_order(values: list[str]) -> list[str]:
             seen.add(value)
             result.append(value)
     return result
+
+
+def normalize_label(value: str) -> str:
+    normalized = value.strip().casefold()
+    for char in ("-", "_", "/", "."):
+        normalized = normalized.replace(char, " ")
+    return " ".join(normalized.split())
